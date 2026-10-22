@@ -40,7 +40,7 @@ import (
 const maxBodyBytes = 256 << 10
 
 func main() {
-	middleware.ConfigureLogger()
+	middleware.ConfigureLogger(os.Stderr)
 	if err := run(); err != nil {
 		slog.Error("til-backend stopped", "err", err)
 		os.Exit(1)

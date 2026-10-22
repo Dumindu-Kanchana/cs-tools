@@ -22,14 +22,17 @@ import (
 	"net/http"
 	"strings"
 	"testing"
+
+	"github.com/wso2-open-operations/cs-tools/apps/today-i-learned/backend/internal/middleware"
 )
 
-// captureLogs sends slog's default logger to a buffer until the test ends.
+// captureLogs sends the service's own logger, which adds the caller's userID,
+// to a buffer until the test ends.
 func captureLogs(t *testing.T) *bytes.Buffer {
 	t.Helper()
 	var buf bytes.Buffer
 	prev := slog.Default()
-	slog.SetDefault(slog.New(slog.NewTextHandler(&buf, nil)))
+	middleware.ConfigureLogger(&buf)
 	t.Cleanup(func() { slog.SetDefault(prev) })
 	return &buf
 }
@@ -49,10 +52,10 @@ func TestEveryWriteIsLogged(t *testing.T) {
 	}
 
 	for _, want := range []string{
-		`msg="entry created" entryID=` + e.ID,
-		`msg="entry updated" entryID=` + e.ID + ` byAuthor=false`,
-		`msg="entry sent to Google Chat" entryID=` + e.ID,
-		`msg="entry deleted" entryID=` + e.ID + ` byAuthor=true`,
+		`msg="entry created" entryID=` + e.ID + ` userID=u-jane`,
+		`msg="entry updated" entryID=` + e.ID + ` byAuthor=false userID=u-mod`,
+		`msg="entry sent to Google Chat" entryID=` + e.ID + ` userID=u-mod`,
+		`msg="entry deleted" entryID=` + e.ID + ` byAuthor=true userID=u-jane`,
 	} {
 		if !strings.Contains(logs.String(), want) {
 			t.Errorf("logs lack %q:\n%s", want, logs)
