@@ -366,7 +366,7 @@ components:
           type: string
         who:
           type: string
-          description: The author's name, from their token when they shared it.
+          description: The author's name. A new entry takes it from the author's token.
         where:
           $ref: '#/components/schemas/Source'
         whereDetail:

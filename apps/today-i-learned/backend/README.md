@@ -82,9 +82,9 @@ written to be shown to people as they are.
 ## How it works
 
 - **Identity.** Each token's signature, issuer and expiry are checked against
-  the published keys. An entry's byline and `submittedByEmail` always come
-  from the token, never the request, so no entry is anonymous and no one can
-  post as someone else.
+  the published keys. `submittedByEmail` always comes from the token, never
+  the request, and so does a new entry's byline, so no entry is anonymous and
+  no one can post as someone else.
 - **Webapp only.** Sharing and editing need a token issued to the webapp
   (`ONE_WSO2_WEBAPP_CLIENT_ID`). An employee's token from another
   application can read and delete, but not post.
